@@ -99,9 +99,19 @@ io.on('connection', function(socket){
 
 
 app.get('/',function(req,res,next){
-	res.render('main/home');
+  
+  if(!req.session.user_id)
+    res.render('main/home');
+  else
+    User.findOne({_id:req.session.user_id},function(error,user){
+      if(error) next(error);
+      return res.redirect('/chat-window/'+user.username);   
+    });
 });
 
+app.get('*', function(req, res){
+  res.status(404).send('<h1 align="center">Looks like you are in wrong place!</h1><hr><h1 align="center">Error 404</h1>');
+});
 
 
 server.listen(secret.port,function(){

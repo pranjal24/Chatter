@@ -1,16 +1,16 @@
 var router=require('express').Router();
-
+var support=require('../utility/support');
 var User=require('../models/user');
 var Chat=require('../models/chat');
 
-router.get('/chat-window/:username',function(req,res,next){
-	User.find({},function(error,users){
-		if(error) return next(error);
-		User.findOne({username:req.params.username},function(err,user){
-			if(err) return next(err);
-			res.render('chat/chat-window',{user:user,users:users});	
-		});
-	});
+router.get('/chat-window/:username',support.checkAuth,function(req,res,next){
+  User.find({},function(error,users){
+    if(error) return next(error);
+    User.findOne({username:req.params.username},function(err,user){
+      if(err) return next(err);
+      res.render('chat/chat-window',{user:user,users:users}); 
+    });
+  });
 });
 
 router.post('/chats',function(req,res,next){
